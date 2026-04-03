@@ -1,0 +1,14 @@
+# --- BASES DE DATOS (Pesadas) ---
+*.db
+*.sqlite
+*.sqlite3
+
+# --- CARPETAS DE DATOS Y RESPALDOS (Locales) ---
+backups/
+01_OBTENER/raw_data/
+02_LIMPIAR/staging/
+
+# --- ARCHIVOS DE PYTHON Y SISTEMA ---
+__pycache__/
+.env
+.ipynb_checkpoints/
