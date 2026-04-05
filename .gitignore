@@ -1,0 +1,14 @@
+# Bases de datos de DuckDB
+*.db
+*.db.wal
+*.wal
+
+# Archivos crudos y pesados
+*.csv
+*.xlsx
+
+# Archivos temporales de Python y Jupyter
+__pycache__/
+.ipynb_checkpoints/
+nohup.out
+minero.log
