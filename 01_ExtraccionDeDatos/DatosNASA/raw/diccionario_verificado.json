@@ -1,0 +1,1390 @@
+[
+    {
+        "id": "T2M",
+        "nombre": "Temperature at 2 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_SW_DWN",
+        "nombre": "All Sky Surface Shortwave Downward Irradiance",
+        "fuente": "flashflux",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "RH2M",
+        "nombre": "Relative Humidity at 2 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS2M",
+        "nombre": "Wind Speed at 2 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "T2MDEW",
+        "nombre": "Dew/Frost Point at 2 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "T2M_MAX",
+        "nombre": "Temperature at 2 Meters Maximum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "T2M_MIN",
+        "nombre": "Temperature at 2 Meters Minimum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "PS",
+        "nombre": "Surface Pressure",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "T2MWET",
+        "nombre": "Wet Bulb Temperature at 2 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS50M",
+        "nombre": "Wind Speed at 50 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_LW_DWN",
+        "nombre": "All Sky Surface Longwave Downward Irradiance",
+        "fuente": "flashflux",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WD50M",
+        "nombre": "Wind Direction at 50 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WD2M",
+        "nombre": "Wind Direction at 2 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_SW_DIFF",
+        "nombre": "All Sky Surface Shortwave Diffuse Irradiance",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_SW_DNI",
+        "nombre": "All Sky Surface Shortwave Downward Direct Normal Irradiance",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SRF_ALB",
+        "nombre": "All Sky Surface Albedo",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLOUD_AMT",
+        "nombre": "Cloud Amount",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "PRECTOTCORR",
+        "nombre": "Precipitation Corrected",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TOA_SW_DWN",
+        "nombre": "Top-Of-Atmosphere Shortwave Downward Irradiance",
+        "fuente": "flashflux",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS10M",
+        "nombre": "Wind Speed at 10 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "GWETPROF",
+        "nombre": "Profile Soil Moisture",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TS",
+        "nombre": "Earth Skin Temperature",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WD10M",
+        "nombre": "Wind Direction at 10 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_PAR_TOT",
+        "nombre": "All Sky Surface Total PAR",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "QV2M",
+        "nombre": "Specific Humidity at 2 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "T2M_RANGE",
+        "nombre": "Temperature at 2 Meters Range",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_KT",
+        "nombre": "All Sky Insolation Clearness Index",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_SFC_SW_DWN",
+        "nombre": "Clear Sky Surface Shortwave Downward Irradiance",
+        "fuente": "flashflux",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "GWETROOT",
+        "nombre": "Root Zone Soil Wetness",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "GWETTOP",
+        "nombre": "Surface Soil Wetness",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS10M_MAX",
+        "nombre": "Wind Speed at 10 Meters Maximum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS10M_MIN",
+        "nombre": "Wind Speed at 10 Meters Minimum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS10M_RANGE",
+        "nombre": "Wind Speed at 10 Meters Range",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS50M_MAX",
+        "nombre": "Wind Speed at 50 Meters Maximum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS50M_MIN",
+        "nombre": "Wind Speed at 50 Meters Minimum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS50M_RANGE",
+        "nombre": "Wind Speed at 50 Meters Range",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_UVA",
+        "nombre": "All Sky Surface UVA Irradiance",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_UVB",
+        "nombre": "All Sky Surface UVB Irradiance",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_UV_INDEX",
+        "nombre": "All Sky Surface UV Index",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CDD0",
+        "nombre": "Cooling Degree Days Above 0 C",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CDD18_3",
+        "nombre": "Cooling Degree Days Above 18.3 C",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_KT",
+        "nombre": "Clear Sky Insolation Clearness Index",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_SFC_PAR_TOT",
+        "nombre": "Clear Sky Surface Total PAR",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "FROST_DAYS",
+        "nombre": "Frost Days",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "GWM_HEIGHT",
+        "nombre": "GWM Height",
+        "fuente": "gwm",
+        "rango": {
+            "start": "1992/12/31",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "HDD0",
+        "nombre": "Heating Degree Days Below 0 C",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "HDD18_3",
+        "nombre": "Heating Degree Days Below 18.3 C",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "IMERG_PRECTOT",
+        "nombre": "Total Precipitation",
+        "fuente": "imerg",
+        "rango": {
+            "start": "1998/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "MIDDAY_INSOL",
+        "nombre": "Midday Insolation Incident",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "SNODP",
+        "nombre": "Snow Depth",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "SZA",
+        "nombre": "Solar Zenith Angle",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TOA_SW_DNI",
+        "nombre": "Top-Of-Atmosphere Shortwave Direct Normal Radiation",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TS_MAX",
+        "nombre": "Earth Skin Temperature Maximum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TS_MIN",
+        "nombre": "Earth Skin Temperature Minimum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS2M_MAX",
+        "nombre": "Wind Speed at 2 Meters Maximum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS2M_MIN",
+        "nombre": "Wind Speed at 2 Meters Minimum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "WS2M_RANGE",
+        "nombre": "Wind Speed at 2 Meters Range",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "AOD_55",
+        "nombre": "Aerosol Optical Depth 55",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "PW",
+        "nombre": "Precipitable Water",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "U10M",
+        "nombre": "Eastward Wind at 10 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "V10M",
+        "nombre": "Northward Wind at 10 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "AIRMASS",
+        "nombre": "Air Mass",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_NKT",
+        "nombre": "All Sky Normalized Insolation Clearness Index",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_LW_UP",
+        "nombre": "All Sky Surface Longwave Upward Irradiance",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_PAR_DIFF",
+        "nombre": "All Sky Surface Diffuse PAR",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_PAR_DIRH",
+        "nombre": "All Sky Surface Direct Horizontal PAR",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_SW_DIRH",
+        "nombre": "All Sky Surface Shortwave Direct Horizontal Irradiance",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ALLSKY_SFC_SW_UP",
+        "nombre": "All Sky Surface Shortwave Upward Irradiance",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "AOD_55_ADJ",
+        "nombre": "Adjusted Aerosol Optical Depth 55",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "AOD_84",
+        "nombre": "Aerosol Optical Depth 84",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLOUD_AMT_DAY",
+        "nombre": "Cloud Amount at Daytime",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLOUD_AMT_NIGHT",
+        "nombre": "Cloud Amount at Nighttime",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLOUD_BT",
+        "nombre": "Cloud Bottom Temperature",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLOUD_BT_MAX",
+        "nombre": "Maximum Cloud Bottom Temperature",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLOUD_BT_MIN",
+        "nombre": "Minimum Cloud Bottom Temperature",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLOUD_OD",
+        "nombre": "Cloud Optical Visible Depth",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLOUD_TT",
+        "nombre": "Cloud Top Temperature",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLOUD_TT_MAX",
+        "nombre": "Maximum Cloud Top Temperature",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLOUD_TT_MIN",
+        "nombre": "Minimum Cloud Top Temperature",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_DAYS",
+        "nombre": "Clear Sky Days",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_NKT",
+        "nombre": "Clear Sky Normalized Insolation Clearness Index",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_SFC_LW_DWN",
+        "nombre": "Clear Sky Surface Longwave Downward Irradiance",
+        "fuente": "flashflux",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_SFC_LW_UP",
+        "nombre": "Clear Sky Surface Longwave Upward Irradiance",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_SFC_PAR_DIFF",
+        "nombre": "Clear Sky Surface Diffuse PAR",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_SFC_PAR_DIRH",
+        "nombre": "Clear Sky Surface Direct Horizontal PAR",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_SFC_SW_DIFF",
+        "nombre": "Clear Sky Surface Shortwave Downward Diffuse Irradiance",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_SFC_SW_DIRH",
+        "nombre": "Clear Sky Surface Shortwave Direct Horizontal Irradiance",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_SFC_SW_DNI",
+        "nombre": "Clear Sky Surface Shortwave Downward Direct Normal Irradiance",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_SFC_SW_UP",
+        "nombre": "Clear Sky Surface Shortwave Upward Irradiance",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "CLRSKY_SRF_ALB",
+        "nombre": "Clear Sky Surface Albedo",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "DISPH",
+        "nombre": "Zero Plane Displacement Height",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "EVLAND",
+        "nombre": "Evaporation Land",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "EVPTRNS",
+        "nombre": "Evapotranspiration Energy Flux",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "FRSEAICE",
+        "nombre": "Ice Covered Fraction",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "FRSNO",
+        "nombre": "Land Snowcover Fraction",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "GWM_HEIGHT_ANOMALY",
+        "nombre": "GWM Height Anomaly",
+        "fuente": "gwm",
+        "rango": {
+            "start": "1992/12/31",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "IMERG_PRECLIQUID_PROB",
+        "nombre": "Probability of Liquid Precipitation",
+        "fuente": "imerg",
+        "rango": {
+            "start": "1998/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "IMERG_PRECTOT_COUNT",
+        "nombre": "Count of Precipitation Retrievals",
+        "fuente": "imerg",
+        "rango": {
+            "start": "1998/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "LWLAND",
+        "nombre": "Downward Longwave Flux Land",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ORIGINAL_ALLSKY_SFC_LW_DWN",
+        "nombre": "All Sky Surface Longwave Downward Irradiance",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ORIGINAL_ALLSKY_SFC_SW_DIFF",
+        "nombre": "All Sky Surface Shortwave Diffuse Irradiance",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ORIGINAL_ALLSKY_SFC_SW_DIRH",
+        "nombre": "All Sky Surface Shortwave Direct Horizontal Irradiance",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ORIGINAL_ALLSKY_SFC_SW_DWN",
+        "nombre": "All Sky Surface Shortwave Downward Irradiance",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ORIGINAL_CLRSKY_SFC_LW_DWN",
+        "nombre": "Clear Sky Surface Longwave Downward Irradiance",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "ORIGINAL_CLRSKY_SFC_SW_DWN",
+        "nombre": "Clear Sky Surface Shortwave Downward Irradiance",
+        "fuente": "srb",
+        "rango": {
+            "start": "1984/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "PBLTOP",
+        "nombre": "Planetary Boundary Layer Top Pressure",
+        "fuente": "merra2",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "PRECSNO",
+        "nombre": "Snow Precipitation",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "PRECSNOLAND",
+        "nombre": "Snow Precipitation Land",
+        "fuente": "merra2",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "PRECTOT",
+        "nombre": "Total Precipitation",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "PRMC",
+        "nombre": "Profile Soil Moisture",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "PRMC_PRCNTL",
+        "nombre": "Profile Soil Moisture (Percentile)",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "PSH",
+        "nombre": "Peak Sun Hour",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "QV10M",
+        "nombre": "Specific Humidity at 10 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "RHOA",
+        "nombre": "Surface Air Density",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "RZMC",
+        "nombre": "Root Zone Soil Moisture",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "RZMC_PRCNTL",
+        "nombre": "Root Zone Soil Moisture (Percentile)",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "SFMC",
+        "nombre": "Surface Soil Moisture",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "SLP",
+        "nombre": "Sea Level Pressure",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "SRF_ALB_ADJ",
+        "nombre": "Surface Albedo Adjusted",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "SWLAND",
+        "nombre": "Downward Shortwave Flux Land",
+        "fuente": "NASA",
+        "rango": {},
+        "unidades": "Por definir"
+    },
+    {
+        "id": "T10M",
+        "nombre": "Temperature at 10 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "T10M_MAX",
+        "nombre": "Temperature at 10 Meters Maximum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "T10M_MIN",
+        "nombre": "Temperature at 10 Meters Minimum",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "T10M_RANGE",
+        "nombre": "Temperature at 10 Meters Range",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TO3",
+        "nombre": "Total Column Ozone",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TQV",
+        "nombre": "Total Column Precipitable Water",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TROPPB",
+        "nombre": "Tropopause Pressure based on blended estimate.",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TROPQ",
+        "nombre": "Tropopause Specific Humidity using blended TROPP estimate.",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TROPT",
+        "nombre": "Tropopause Temperature using blended TROPP estimate.",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TSOIL1",
+        "nombre": "Soil Temperatures Layer 1",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TSOIL2",
+        "nombre": "Soil Temperatures Layer 2",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TSOIL3",
+        "nombre": "Soil Temperatures Layer 3",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TSOIL4",
+        "nombre": "Soil Temperatures Layer 4",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TSOIL5",
+        "nombre": "Soil Temperatures Layer 5",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TSOIL6",
+        "nombre": "Soil Temperatures Layer 6",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TSURF",
+        "nombre": "Surface Temperature of Land and Snow",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TS_ADJ",
+        "nombre": "Earth Skin Temperature Adjusted",
+        "fuente": "syn1deg",
+        "rango": {
+            "start": "2001/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "TS_RANGE",
+        "nombre": "Earth Skin Temperature Range",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "U2M",
+        "nombre": "Eastward Wind at 2 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "U50M",
+        "nombre": "Eastward Wind at 50 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "V2M",
+        "nombre": "Northward Wind at 2 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "V50M",
+        "nombre": "Northward Wind at 50 Meters",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    },
+    {
+        "id": "Z0M",
+        "nombre": "Surface Roughness",
+        "fuente": "geosit",
+        "rango": {
+            "start": "1981/01/01",
+            "end": "2029/12/31"
+        },
+        "unidades": "Por definir"
+    }
+]
