@@ -10,7 +10,7 @@ from datetime import timedelta
 # ==========================================
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "..", ".."))
-DB_PATH = os.path.join(ROOT_DIR, 'data', 'BaseDeDatos.db')
+DB_PATH = os.path.join(ROOT_DIR, 'data', 'BaseDeDatos_Raw.db')
 
 MI_PROYECTO = 'forward-aura-491020-a0' # Tu proyecto de Google Cloud
 
@@ -118,6 +118,13 @@ def ejecutar_minero_vegetacion():
                     # 4.4 Inserción en Base de Datos
                     # Convertir el tiempo de Google (milisegundos) a fecha normal
                     fecha_satelite_str = pd.to_datetime(mejor_dato['time'], unit='ms').strftime('%Y-%m-%d')
+
+                    # --- EL ESCUDO ANTI-DUPLICADOS ---
+                    # Borramos cualquier registro previo de vegetación de este incendio para evitar duplicados y conflictos
+                    con.execute("""
+                        DELETE FROM climatologia 
+                        WHERE id_clave_inc = ? AND id_variable IN ('NDVI', 'NDWI', 'NDMI')
+                    """, (id_inc,))
 
                     for var_id in ['NDVI', 'NDWI', 'NDMI']:
                         con.execute("""

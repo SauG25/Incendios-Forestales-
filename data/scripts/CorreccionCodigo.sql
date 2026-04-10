@@ -1,50 +1,35 @@
 -- ==========================================
--- 0. LIMPIEZA TOTAL (Prevención de duplicados y conflictos)
+-- 0. CREACIÓN SEGURA (Sin borrar datos históricos)
 -- ==========================================
-DROP TABLE IF EXISTS climatologia;
-DROP TABLE IF EXISTS danos;
-DROP TABLE IF EXISTS incendios;
-DROP TABLE IF EXISTS municipios;
-DROP TABLE IF EXISTS estado;
-DROP TABLE IF EXISTS causa;
-DROP TABLE IF EXISTS vegetacion;
-DROP TABLE IF EXISTS diccionario;
 
-DROP SEQUENCE IF EXISTS seq_vegetacion;
-DROP SEQUENCE IF EXISTS seq_causa;
-DROP SEQUENCE IF EXISTS seq_registro;
-
--- ==========================================
--- DEFINICIÓN DE SECUENCIAS (Para IDs autoincrementales)
--- ==========================================
-CREATE SEQUENCE seq_vegetacion;
-CREATE SEQUENCE seq_causa;
-CREATE SEQUENCE seq_registro;
+CREATE SEQUENCE IF NOT EXISTS seq_vegetacion;
+CREATE SEQUENCE IF NOT EXISTS seq_causa;
+CREATE SEQUENCE IF NOT EXISTS seq_registro;
 
 -- ==========================================
 -- NIVEL 1: ENTIDADES PADRE (INDEPENDIENTES)
 -- ==========================================
 
-CREATE TABLE diccionario ( 
+CREATE TABLE IF NOT EXISTS diccionario ( 
     id_variable VARCHAR PRIMARY KEY, 
     fuente VARCHAR NOT NULL,
     nombre_completo VARCHAR NOT NULL,
     unidad_de_medida VARCHAR        
 );
 
-CREATE TABLE estado (
+CREATE TABLE IF NOT EXISTS estado (
     id_clave_ent INTEGER PRIMARY KEY, 
     region VARCHAR,
     estado VARCHAR 
 );
 
-CREATE TABLE vegetacion (
+CREATE TABLE IF NOT EXISTS vegetacion (
     id_vegetacion INTEGER PRIMARY KEY DEFAULT nextval('seq_vegetacion'),
     regimen_del_fuego VARCHAR NOT NULL,
     tipo_de_vegetacion VARCHAR NOT NULL
 );
 
-CREATE TABLE causa (
+CREATE TABLE IF NOT EXISTS causa (
     id_causa INTEGER PRIMARY KEY DEFAULT nextval('seq_causa'),
     causa VARCHAR NOT NULL,
     causa_especifica VARCHAR NOT NULL
@@ -54,7 +39,7 @@ CREATE TABLE causa (
 -- NIVEL 2: ENTIDADES DE SEGUNDO NIVEL
 -- ==========================================
 
-CREATE TABLE municipios (
+CREATE TABLE IF NOT EXISTS municipios (
     id_cvegeo VARCHAR PRIMARY KEY,    
     id_clave_ent INTEGER NOT NULL, 
     nombre_municipio VARCHAR NOT NULL,
@@ -65,7 +50,7 @@ CREATE TABLE municipios (
 -- NIVEL 3: LA ENTIDAD CENTRAL (INCENDIOS)
 -- ==========================================
 
-CREATE TABLE incendios (
+CREATE TABLE IF NOT EXISTS incendios (
     id_clave_inc VARCHAR PRIMARY KEY, 
     id_cvegeo VARCHAR NOT NULL,       
     id_causa INTEGER NOT NULL, 
@@ -85,7 +70,7 @@ CREATE TABLE incendios (
 -- NIVEL 4: TABLAS HIJAS (DEPENDEN DE INCENDIOS)
 -- ==========================================
 
-CREATE TABLE danos (                  
+CREATE TABLE IF NOT EXISTS danos (                  
     id_clave_inc VARCHAR PRIMARY KEY, 
     hojarasca FLOAT NOT NULL,
     arbustivo FLOAT NOT NULL,
@@ -97,7 +82,7 @@ CREATE TABLE danos (
 );
 
 -- Modelo EAV para clima satelital (Manejo de Series Temporales)
-CREATE TABLE climatologia (
+CREATE TABLE IF NOT EXISTS climatologia (
     id_registro BIGINT PRIMARY KEY DEFAULT nextval('seq_registro'),
     id_variable VARCHAR NOT NULL,     
     id_clave_inc VARCHAR NOT NULL,    

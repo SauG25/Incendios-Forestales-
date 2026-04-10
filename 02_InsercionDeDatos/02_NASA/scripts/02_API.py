@@ -6,22 +6,19 @@ import json
 import os
 from datetime import timedelta
 
+# --- CONFIGURACIÓN DE RUTAS ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "..", ".."))
 
-DB_PATH = os.path.join(ROOT_DIR, 'data', 'BaseDeDatos.db')
+DB_PATH = os.path.join(ROOT_DIR, 'data', 'BaseDeDatos_Raw.db')
 JSON_PATH = os.path.join(ROOT_DIR, '01_ExtraccionDeDatos', 'DatosNASA', 'raw', 'diccionario_verificado.json')
 
 DIAS_HISTORIA = 10 
-TOTAL_VARIABLES_OBJETIVO = 143
+TOTAL_VARIABLES_OBJETIVO = 143 # 140 NASA + 3 GEE
 
 def ejecutar_minero_series_temporales():
-    # 1. Verificacion de existencia
-    if not os.path.exists(DB_PATH):
-        print(f"Error: No se encontro la base de datos en {DB_PATH}")
-        return
-    if not os.path.exists(JSON_PATH):
-        print(f"Error: No se encontro el diccionario en {JSON_PATH}")
+    if not os.path.exists(DB_PATH) or not os.path.exists(JSON_PATH):
+        print(f"Error: Verifica las rutas de la DB ({DB_PATH}) o el Diccionario.")
         return
 
     print(f"Conectando a base de datos: {DB_PATH}")
@@ -32,10 +29,11 @@ def ejecutar_minero_series_temporales():
             diccionario = json.load(f)
         
         ids_variables = [v['id'] for v in diccionario]
-        paquetes = list(range(0, len(ids_variables), 15)) 
+        # Agrupamos de 15 en 15 para no saturar la URL de la NASA
+        paquetes = [ids_variables[i:i + 15] for i in range(0, len(ids_variables), 15)]
 
-        # 2. BUSQUEDA AMBICIOSA: Incendios que no tengan las 143 variables completas
-        print("Calculando incendios con datos incompletos (esto puede tardar unos segundos)...")
+        # 1. BÚSQUEDA DE INCENDIOS INCOMPLETOS
+        print("Buscando incendios que no llegan a las 143 variables...")
         pendientes = con.execute(f"""
             SELECT i.id_clave_inc, i.latitud, i.longitud, i.fecha_inicio 
             FROM incendios i
@@ -49,13 +47,13 @@ def ejecutar_minero_series_temporales():
         """).df()
 
         if pendientes.empty:
-            print("¡Felicidades! Todos los incendios tienen sus 143 variables completas.")
+            print("¡Felicidades! Todos los incendios están completos.")
             return
 
-        print(f"Se encontraron {len(pendientes)} incendios pendientes o incompletos.")
+        print(f"Procesando {len(pendientes)} incendios pendientes.")
         pendientes['fecha_inicio'] = pd.to_datetime(pendientes['fecha_inicio'])
 
-        # 3. Iteracion y Mineria
+        # 2. PROCESAMIENTO
         for _, inc in pendientes.iterrows():
             id_inc = inc['id_clave_inc']
             fecha_fin = inc['fecha_inicio']
@@ -64,27 +62,25 @@ def ejecutar_minero_series_temporales():
             f_start = fecha_ini.strftime('%Y%m%d')
             f_end = fecha_fin.strftime('%Y%m%d')
 
-            print(f"\n--- Procesando incendio: {id_inc} ---")
+            print(f"\n--- Trabajando en incendio: {id_inc} ---")
 
-            for i in paquetes:
-                vars_en_paquete = ids_variables[i:i+15]
+            for vars_en_paquete in paquetes:
                 bundle = ",".join(vars_en_paquete)
                 
-                # VERIFICACIÓN INTERNA: ¿Ya tenemos la primera variable de este paquete?
-                # Si ya existe, saltamos este paquete para no duplicar ni perder tiempo
-                check = con.execute("""
-                    SELECT COUNT(*) FROM climatologia 
-                    WHERE id_clave_inc = ? AND id_variable = ?
-                """, (id_inc, vars_en_paquete[0])).fetchone()[0]
+                # --- VERIFICACIÓN DE HUECOS ---
+                # Contamos cuántas de estas 15 variables ya tenemos registradas
+                marcador = con.execute(f"""
+                    SELECT COUNT(DISTINCT id_variable) FROM climatologia 
+                    WHERE id_clave_inc = ? AND id_variable IN ({','.join(['?']*len(vars_en_paquete))})
+                """, (id_inc, *vars_en_paquete)).fetchone()[0]
 
-                if check > 0:
-                    continue # Ya tenemos estos datos, saltar al siguiente paquete
+                if marcador == len(vars_en_paquete):
+                    continue # Paquete completo, saltar al siguiente
 
                 url = (f"https://power.larc.nasa.gov/api/temporal/daily/point?"
                        f"start={f_start}&end={f_end}&latitude={inc['latitud']}&longitude={inc['longitud']}"
                        f"&community=ag&parameters={bundle}&format=json")
                 
-                # --- MODO TERCO (RETRY) ---
                 exito = False
                 intentos = 0
                 while not exito and intentos < 5:
@@ -95,39 +91,45 @@ def ejecutar_minero_series_temporales():
                             data = res.json()
                             parametros = data.get('properties', {}).get('parameter', {})
                             
+                            # --- EL ESCUDO ANTI-DUPLICADOS ---
+                            # Borramos solo las variables de este paquete antes de insertar
+                            con.execute(f"""
+                                DELETE FROM climatologia 
+                                WHERE id_clave_inc = ? AND id_variable IN ({','.join(['?']*len(vars_en_paquete))})
+                            """, (id_inc, *vars_en_paquete))
+                            
                             for var_id, serie_temporal in parametros.items():
                                 for fecha_str, valor in serie_temporal.items():
-                                    val_float = float(valor)
-                                    fecha_obj = f"{fecha_str[:4]}-{fecha_str[4:6]}-{fecha_str[6:]}"
+                                    # Convertimos '20250101' -> '2025-01-01'
+                                    fecha_sql = f"{fecha_str[:4]}-{fecha_str[4:6]}-{fecha_str[6:]}"
                                     
                                     con.execute("""
                                         INSERT INTO climatologia (id_variable, id_clave_inc, fecha_de_observacion, resultado_numerico)
                                         VALUES (?, ?, ?, ?)
-                                    """, (var_id, id_inc, fecha_obj, val_float))
+                                    """, (var_id, id_inc, fecha_sql, float(valor)))
                             
-                            time.sleep(0.7) # Pausa técnica un poco más amplia para seguridad
+                            print(f"    [OK] Paquete de {len(vars_en_paquete)} variables sincronizado.")
+                            time.sleep(0.8) 
                             exito = True 
                             
                         elif res.status_code == 429:
-                            print(f"  NASA saturada (429). Pausa de 60s... (Intento {intentos+1}/5)")
+                            print(f"  NASA saturada (429). Esperando 60s... (Intento {intentos+1}/5)")
                             time.sleep(60)
                             intentos += 1
                         else:
-                            print(f" Error HTTP {res.status_code}. Reintentando... (Intento {intentos+1}/5)")
-                            time.sleep(10)
-                            intentos += 1
+                            print(f"  Error HTTP {res.status_code}. Reintentando...")
+                            time.sleep(10); intentos += 1
                             
                     except Exception as e:
-                        print(f" Fallo de conexión: {e}. Reintentando... (Intento {intentos+1}/5)")
-                        time.sleep(15)
-                        intentos += 1
+                        print(f"  Fallo: {str(e)[:50]}. Reintentando...")
+                        time.sleep(15); intentos += 1
                 
                 if not exito:
-                    print(f"  PAQUETE PERDIDO: {bundle[:30]}...")
+                    print(f"  [ALERTA] No se pudo recuperar el paquete: {bundle[:30]}...")
 
     finally:
         con.close()
-        print("\nSincronización finalizada. Conexión cerrada.")
+        print("\nProceso terminado. Conexión cerrada con seguridad.")
 
 if __name__ == "__main__":
     ejecutar_minero_series_temporales()
