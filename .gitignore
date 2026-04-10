@@ -1,14 +1,22 @@
-# Bases de datos de DuckDB
+# --- Bases de datos de DuckDB ---
+# Bloqueamos el archivo pesado, pero DVC se encargará de él
 *.db
 *.db.wal
-*.wal
+*.db.tmp
 
-# Archivos crudos y pesados
+# --- Archivos crudos y pesados ---
 *.csv
 *.xlsx
 
-# Archivos temporales de Python y Jupyter
+# --- Logs y Temporales de Python ---
 __pycache__/
+*.py[cod]
+*$py.class
 .ipynb_checkpoints/
 nohup.out
 minero.log
+
+# --- DVC Local (IMPORTANTE) ---
+# Esto evita que tus credenciales personales se suban al repo
+/data/.dvc/config.local
+.dvc/config.local
