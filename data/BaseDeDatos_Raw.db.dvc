@@ -1,0 +1,5 @@
+outs:
+- md5: f764e6ddfdafe3106ba9110b26b35a8e
+  size: 513814528
+  hash: md5
+  path: BaseDeDatos_Raw.db
