@@ -71,32 +71,17 @@ CREATE TABLE IF NOT EXISTS incendios (
 -- ==========================================
 
 CREATE TABLE IF NOT EXISTS demografia (
-    id_cvegeo VARCHAR NOT NULL,       -- Relación con municipios (FK)
-    anio INTEGER NOT NULL,            -- Proviene de 'Fecha' en el CSV
-    sexo VARCHAR NOT NULL,            -- 'HOMBRES' o 'MUJERES'
-    pob_total INTEGER NOT NULL,       -- Atributo Derivado (1er nivel)
+    id_cvegeo VARCHAR NOT NULL,       
+    anio INTEGER NOT NULL,            
+    sexo VARCHAR NOT NULL,            
+    pob_total INTEGER NOT NULL,       
     
-    -- Atributos Atómicos (Rangos de edad)
-    r_00_04 INTEGER,
-    r_05_09 INTEGER,
-    r_10_14 INTEGER,
-    r_15_19 INTEGER,
-    r_20_24 INTEGER,
-    r_25_29 INTEGER,
-    r_30_34 INTEGER,
-    r_35_39 INTEGER,
-    r_40_44 INTEGER,
-    r_45_49 INTEGER,
-    r_50_54 INTEGER,
-    r_55_59 INTEGER,
-    r_60_64 INTEGER,
-    r_65_69 INTEGER,
-    r_70_74 INTEGER,
-    r_75_79 INTEGER,
-    r_80_84 INTEGER,
-    r_85_mm INTEGER,
+    r_00_04 INTEGER, r_05_09 INTEGER, r_10_14 INTEGER, r_15_19 INTEGER,
+    r_20_24 INTEGER, r_25_29 INTEGER, r_30_34 INTEGER, r_35_39 INTEGER,
+    r_40_44 INTEGER, r_45_49 INTEGER, r_50_54 INTEGER, r_55_59 INTEGER,
+    r_60_64 INTEGER, r_65_69 INTEGER, r_70_74 INTEGER, r_75_79 INTEGER,
+    r_80_84 INTEGER, r_85_mm INTEGER,
     
-    -- Llave Primaria Compuesta: Evita duplicar año y sexo por municipio
     PRIMARY KEY (id_cvegeo, anio, sexo),
     FOREIGN KEY (id_cvegeo) REFERENCES municipios(id_cvegeo)
 );
@@ -113,6 +98,18 @@ CREATE TABLE IF NOT EXISTS danos (
     arbolado_adulto FLOAT NOT NULL,
     renuevo FLOAT NOT NULL,
     tamanio VARCHAR NOT NULL,         
+    FOREIGN KEY (id_clave_inc) REFERENCES incendios(id_clave_inc)
+);
+
+-- NUEVA TABLA: Operaciones (Relación 1 a 1)
+CREATE TABLE IF NOT EXISTS operaciones (
+    id_clave_inc VARCHAR PRIMARY KEY,  -- Actúa como PK y FK simultáneamente
+    fecha_termino DATE,
+    hora_deteccion TIME,
+    hora_llegada TIME,
+    duracion_hhmm INTERVAL,            -- INTERVAL es ideal en DuckDB para horas:minutos
+    duracion_dias INTEGER,
+    
     FOREIGN KEY (id_clave_inc) REFERENCES incendios(id_clave_inc)
 );
 

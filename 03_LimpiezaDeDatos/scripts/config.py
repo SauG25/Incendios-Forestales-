@@ -14,3 +14,5 @@ WORKING_DB = os.path.join(BASE_DIR, 'data', 'BaseDeDatos_Working.db')
 # --- RUTAS DE ARCHIVOS EXTERNOS ---
 SCHEMA_SQL = os.path.join(BASE_DIR, 'data', 'scripts', 'CorreccionCodigo.sql')
 CSV_POBLACION = os.path.join(BASE_DIR, '01_ExtraccionDeDatos', 'DatosPoblacion', 'raw', 'Edomx_poblacion.csv')
+
+ARCHIVO_CONAFOR = os.path.join(BASE_DIR, '01_ExtraccionDeDatos', 'DatosConafor', 'raw', 'incendios_forestales_2015_2025.csv')

@@ -44,3 +44,52 @@ def cargar_demografia(con, csv_path):
     
     except Exception as e:
         print(f"   - [Enrichment] Error al procesar la demografía: {e}")
+# (Manten tu funcion cargar_demografia arriba de esto)
+def cargar_operaciones(con, archivo_operaciones):
+    if not os.path.exists(archivo_operaciones):
+        print(f"   - [Enrichment] Advertencia: No se encontro el archivo en {archivo_operaciones}.")
+        return
+
+    print("   - [Enrichment] Cargando datos de operaciones desde CSV original...")
+    try:
+        # Leemos el CSV (Cargamos todo como texto primero para evitar errores de pandas)
+        df_ops = pd.read_csv(archivo_operaciones, dtype=str)
+        
+        # Limpieza rápida de espacios en los nombres de las columnas por si acaso
+        df_ops.columns = df_ops.columns.str.strip()
+            
+        con.register('df_ops_temp', df_ops)
+
+        # Hacemos el INSERT usando los nombres EXACTOS de tu CSV
+        con.execute("""
+            INSERT INTO main.operaciones (
+                id_clave_inc, 
+                fecha_termino, 
+                hora_deteccion, 
+                hora_llegada, 
+                duracion_hhmm, 
+                duracion_dias
+            )
+            SELECT 
+                "Clave del incendio",
+                
+                -- TRY_CAST es tu mejor amigo: si la fecha/hora viene mal, pone NULL en vez de crashear
+                TRY_CAST("Fecha Termino" AS DATE),
+                TRY_CAST("Detección" AS TIME),
+                TRY_CAST("Llegada" AS TIME),
+                TRY_CAST("Duración" AS INTERVAL),
+                TRY_CAST("Duración días" AS INTEGER)
+                
+            FROM df_ops_temp
+            
+            -- EL BLINDAJE: Solo metemos operaciones de incendios que ya existen en nuestra tabla limpia
+            WHERE "Clave del incendio" IN (SELECT id_clave_inc FROM main.incendios)
+            
+            ON CONFLICT DO NOTHING;
+        """)
+        
+        filas = con.execute("SELECT count(*) FROM main.operaciones").fetchone()[0]
+        print(f"   - [Enrichment] Operaciones insertadas con éxito ({filas} registros).")
+    
+    except Exception as e:
+        print(f"   - [Enrichment] Error al procesar operaciones: {e}")

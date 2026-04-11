@@ -4,9 +4,10 @@ import sys
 import subprocess
 
 # Importamos nuestras piezas de código modulares
-from scripts.config import RAW_DB, WORKING_DB, SCHEMA_SQL, CSV_POBLACION
+# ¡AQUÍ AGREGAMOS LAS NUEVAS IMPORTACIONES!
+from scripts.config import RAW_DB, WORKING_DB, SCHEMA_SQL, CSV_POBLACION, ARCHIVO_CONAFOR
 from scripts.transform import unificar_municipios, migrar_incendios_corregidos
-from scripts.enrichment import cargar_demografia
+from scripts.enrichment import cargar_demografia, cargar_operaciones
 
 def ejecutar_migracion_completa():
     print("\nIniciando proceso de actualizacion de la base Working...")
@@ -41,8 +42,11 @@ def ejecutar_migracion_completa():
 
         # 3. Transformaciones (Nivel 2 y 3)
         unificar_municipios(con)
-        cargar_demografia(con, CSV_POBLACION) # La demografía entra aquí, después de los municipios
+        cargar_demografia(con, CSV_POBLACION) 
         migrar_incendios_corregidos(con)
+
+        # ¡AQUÍ ENCIENDES TUS OPERACIONES!
+        cargar_operaciones(con, ARCHIVO_CONAFOR)
 
         # 4. Migrar Tablas Hijas Pesadas (Nivel 4)
         for tabla in ['danos', 'climatologia']:
