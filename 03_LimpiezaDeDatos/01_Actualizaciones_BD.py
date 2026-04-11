@@ -11,14 +11,22 @@ WORKING_DB = os.path.join(ROOT_DIR, 'data', 'BaseDeDatos_Working.db')
 SCHEMA_SQL = os.path.join(ROOT_DIR, 'data', 'scripts', 'CorreccionCodigo.sql')
 
 def aplicar_limpieza_datos(con):
-    """
-    Espacio reservado para los metodos de limpieza logica.
-    Se ejecuta despues de la migracion de datos.
-    """
-    print("\n--- Etapa de Limpieza ---")
-    print("Aviso: No se han programado metodos de limpieza aun.")
-    print("La base Working mantiene los datos originales de la base Raw.")
-    pass
+    print("\n--- Ejecutando Limpieza y Unificación de IDs ---")
+    # 1. Mover incendios a los IDs de 5 dígitos
+    con.execute("""
+        UPDATE incendios
+        SET id_cvegeo = sub.id_oficial
+        FROM (
+            SELECT m1.id_cvegeo AS id_incorrecto, m2.id_cvegeo AS id_oficial
+            FROM municipios m1
+            JOIN municipios m2 ON m1.nombre_municipio = m2.nombre_municipio
+            WHERE LENGTH(m1.id_cvegeo) < 5 AND LENGTH(m2.id_cvegeo) = 5
+        ) AS sub
+        WHERE incendios.id_cvegeo = sub.id_incorrecto;
+    """)
+    # 2. Eliminar municipios basura (los de 4 dígitos)
+    con.execute("DELETE FROM municipios WHERE LENGTH(id_cvegeo) < 5;")
+    print("Limpieza terminada con éxito.")
 
 def ejecutar_migracion_completa():
     print("\nIniciando proceso de actualizacion de la base Working...")
