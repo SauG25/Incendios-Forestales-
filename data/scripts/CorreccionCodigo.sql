@@ -67,6 +67,41 @@ CREATE TABLE IF NOT EXISTS incendios (
 );
 
 -- ==========================================
+-- NIVEL 3.5: ENTIDAD DEMOGRÁFICA
+-- ==========================================
+
+CREATE TABLE IF NOT EXISTS demografia (
+    id_cvegeo VARCHAR NOT NULL,       -- Relación con municipios (FK)
+    anio INTEGER NOT NULL,            -- Proviene de 'Fecha' en el CSV
+    sexo VARCHAR NOT NULL,            -- 'HOMBRES' o 'MUJERES'
+    pob_total INTEGER NOT NULL,       -- Atributo Derivado (1er nivel)
+    
+    -- Atributos Atómicos (Rangos de edad)
+    r_00_04 INTEGER,
+    r_05_09 INTEGER,
+    r_10_14 INTEGER,
+    r_15_19 INTEGER,
+    r_20_24 INTEGER,
+    r_25_29 INTEGER,
+    r_30_34 INTEGER,
+    r_35_39 INTEGER,
+    r_40_44 INTEGER,
+    r_45_49 INTEGER,
+    r_50_54 INTEGER,
+    r_55_59 INTEGER,
+    r_60_64 INTEGER,
+    r_65_69 INTEGER,
+    r_70_74 INTEGER,
+    r_75_79 INTEGER,
+    r_80_84 INTEGER,
+    r_85_mm INTEGER,
+    
+    -- Llave Primaria Compuesta: Evita duplicar año y sexo por municipio
+    PRIMARY KEY (id_cvegeo, anio, sexo),
+    FOREIGN KEY (id_cvegeo) REFERENCES municipios(id_cvegeo)
+);
+
+-- ==========================================
 -- NIVEL 4: TABLAS HIJAS (DEPENDEN DE INCENDIOS)
 -- ==========================================
 
