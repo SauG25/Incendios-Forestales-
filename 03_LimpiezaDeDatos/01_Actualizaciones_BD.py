@@ -1,32 +1,12 @@
 import duckdb
 import os
 import sys
+import subprocess
 
-# --- CONFIGURACION DE RUTAS ---
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
-
-RAW_DB = os.path.join(ROOT_DIR, 'data', 'BaseDeDatos_Raw.db')
-WORKING_DB = os.path.join(ROOT_DIR, 'data', 'BaseDeDatos_Working.db')
-SCHEMA_SQL = os.path.join(ROOT_DIR, 'data', 'scripts', 'CorreccionCodigo.sql')
-
-def aplicar_limpieza_datos(con):
-    print("\n--- Ejecutando Limpieza y Unificación de IDs ---")
-    # 1. Mover incendios a los IDs de 5 dígitos
-    con.execute("""
-        UPDATE incendios
-        SET id_cvegeo = sub.id_oficial
-        FROM (
-            SELECT m1.id_cvegeo AS id_incorrecto, m2.id_cvegeo AS id_oficial
-            FROM municipios m1
-            JOIN municipios m2 ON m1.nombre_municipio = m2.nombre_municipio
-            WHERE LENGTH(m1.id_cvegeo) < 5 AND LENGTH(m2.id_cvegeo) = 5
-        ) AS sub
-        WHERE incendios.id_cvegeo = sub.id_incorrecto;
-    """)
-    # 2. Eliminar municipios basura (los de 4 dígitos)
-    con.execute("DELETE FROM municipios WHERE LENGTH(id_cvegeo) < 5;")
-    print("Limpieza terminada con éxito.")
+# Importamos nuestras piezas de código modulares
+from scripts.config import RAW_DB, WORKING_DB, SCHEMA_SQL, CSV_POBLACION
+from scripts.transform import unificar_municipios, migrar_incendios_corregidos
+from scripts.enrichment import cargar_demografia
 
 def ejecutar_migracion_completa():
     print("\nIniciando proceso de actualizacion de la base Working...")
@@ -35,62 +15,72 @@ def ejecutar_migracion_completa():
         print(f"Error: No se encuentra la base Raw en {RAW_DB}")
         return
     if not os.path.exists(SCHEMA_SQL):
-        print(f"Error: No se encuentra el SQL de estructura en {SCHEMA_SQL}")
+        print(f"Error: No se encuentra el SQL en {SCHEMA_SQL}")
         return
 
     try:
-        # 1. Eliminar base de trabajo anterior
         if os.path.exists(WORKING_DB):
             os.remove(WORKING_DB)
             print("Base Working anterior eliminada. Generando copia limpia...")
 
         con = duckdb.connect(WORKING_DB)
-        print(f"Aplicando estructura desde: {os.path.basename(SCHEMA_SQL)}")
         
-        # 2. Crear estructura (Tablas y Llaves)
+        # 1. Crear Estructura
         with open(SCHEMA_SQL, 'r') as f:
-            sql_script = f.read()
-            con.execute(sql_script)
+            con.execute(f.read())
 
-        # 3. Vincular la base Raw (Solo lectura)
         con.execute(f"ATTACH '{RAW_DB}' AS source_db (READ_ONLY)")
 
-        # 4. Transferir datos respetando el orden de dependencia (Niveles)
-        orden_migracion = [
-            'diccionario', 'estado', 'vegetacion', 'causa', # Nivel 1: Padres
-            'municipios',                                   # Nivel 2: Depende de estado
-            'incendios',                                    # Nivel 3: Depende de minicipios, causa y veg
-            'danos', 'climatologia'                         # Nivel 4: Dependen de incendios y diccionario
-        ]
+        print("Transfiriendo datos con unificación y blindaje en tiempo real...")
+        
+        # 2. Migrar Catálogos Simples (Nivel 1)
+        for tabla in ['diccionario', 'estado', 'vegetacion', 'causa']:
+            con.execute(f"INSERT INTO main.{tabla} SELECT * FROM source_db.{tabla}")
+            filas = con.execute(f"SELECT count(*) FROM main.{tabla}").fetchone()[0]
+            print(f"   - {tabla} lista ({filas} registros).")
 
-        print("Transfiriendo datos respetando la jerarquia de relaciones...")
-        for tabla in orden_migracion:
-            # CORRECCION: Usar el catalog global para buscar la tabla en source_db
-            query_existe = f"SELECT count(*) FROM information_schema.tables WHERE table_catalog = 'source_db' AND table_name = '{tabla}'"
-            existe = con.execute(query_existe).fetchone()[0]
-            
-            if existe > 0:
-                con.execute(f"INSERT INTO main.{tabla} SELECT * FROM source_db.{tabla}")
-                num_filas = con.execute(f"SELECT count(*) FROM main.{tabla}").fetchone()[0]
-                print(f"   - Entidad migrada: '{tabla}' ({num_filas} registros).")
-            else:
-                print(f"   - Advertencia: La tabla '{tabla}' no se encontro en la base Raw (Saltando).")
+        # 3. Transformaciones (Nivel 2 y 3)
+        unificar_municipios(con)
+        cargar_demografia(con, CSV_POBLACION) # La demografía entra aquí, después de los municipios
+        migrar_incendios_corregidos(con)
 
-        # 5. Ejecutar la funcion de limpieza (Placeholder)
-        aplicar_limpieza_datos(con)
+        # 4. Migrar Tablas Hijas Pesadas (Nivel 4)
+        for tabla in ['danos', 'climatologia']:
+            con.execute(f"INSERT INTO main.{tabla} SELECT * FROM source_db.{tabla}")
+            filas = con.execute(f"SELECT count(*) FROM main.{tabla}").fetchone()[0]
+            print(f"   - {tabla} lista ({filas} registros).")
 
         con.close()
-        print(f"\nSincronizacion finalizada exitosamente en: {WORKING_DB}")
+        print(f"\nSincronizacion exitosa en: {WORKING_DB}")
 
     except Exception as e:
         print(f"\nError critico durante el proceso: {e}")
+
+def actualizar_desde_repositorio():
+    print("\n--- Ejecutando Sincronización Automática (Git + DVC) ---")
+    try:
+        # ROOT_DIR para Git/DVC es el directorio base del proyecto
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        
+        print("1. Descargando cambios de código (git pull origin main)...")
+        subprocess.run(["git", "pull", "origin", "main"], cwd=base_dir, check=True)
+        
+        print("\n2. Descargando última versión de los datos (dvc pull)...")
+        subprocess.run(["dvc", "pull"], cwd=base_dir, check=True)
+        
+        print("\n¡Descarga completada! Procediendo a generar la base Working...")
+        ejecutar_migracion_completa()
+        
+    except subprocess.CalledProcessError as e:
+        print(f"\n[ERROR] Falló la sincronización con el servidor.")
+        print(f"Detalle del error: {e}")
 
 def menu():
     print("\n" + "="*55)
     print("   SISTEMA DE ACTUALIZACION DE DATOS (REPLICACION)")
     print("="*55)
     print("1. Actualizar Limpieza (Re-procesar datos locales)")
-    print("2. Actualizar Datos (Git + DVC + Re-procesar)")
+    print("2. Sincronizar y Re-procesar (Automatizado Git+DVC)")
     print("3. Salir")
     
     op = input("\n¿Que quieres hacer? Selecciona una opcion: ")
@@ -98,14 +88,7 @@ def menu():
     if op == "1":
         ejecutar_migracion_completa()
     elif op == "2":
-        print("\n[RECUERDA]: Antes de continuar, debes haber ejecutado:")
-        print("   1. git pull origin main")
-        print("   2. dvc pull")
-        confirmar = input("\n¿Los comandos previos se ejecutaron con exito? (s/n): ")
-        if confirmar.lower() == 's':
-            ejecutar_migracion_completa()
-        else:
-            print("Operacion cancelada. Sincroniza los archivos primero.")
+        actualizar_desde_repositorio()
     elif op == "3":
         print("Cerrando sistema.")
         sys.exit()
