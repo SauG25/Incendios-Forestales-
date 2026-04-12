@@ -61,6 +61,7 @@ def cargar_operaciones(con, archivo_operaciones):
         con.register('df_ops_temp', df_ops)
 
         # Hacemos el INSERT usando los nombres EXACTOS de tu CSV
+
         con.execute("""
             INSERT INTO main.operaciones (
                 id_clave_inc, 
@@ -73,20 +74,23 @@ def cargar_operaciones(con, archivo_operaciones):
             SELECT 
                 "Clave del incendio",
                 
-                -- TRY_CAST es tu mejor amigo: si la fecha/hora viene mal, pone NULL en vez de crashear
-                TRY_CAST("Fecha Termino" AS DATE),
+                -- Usamos strptime para convertir el texto 'DD/MM/YYYY' a DATE real
+                -- Si tu CSV usa guiones (DD-MM-YYYY), cambia las / por - abajo
+                TRY_CAST(strptime("Fecha Termino", '%d/%m/%Y') AS DATE),
+                
+                -- Para las horas, si vienen en formato HH:MM o HH:MM:SS
                 TRY_CAST("Detección" AS TIME),
                 TRY_CAST("Llegada" AS TIME),
+                
+                -- El intervalo y los días
                 TRY_CAST("Duración" AS INTERVAL),
                 TRY_CAST("Duración días" AS INTEGER)
                 
             FROM df_ops_temp
-            
-            -- EL BLINDAJE: Solo metemos operaciones de incendios que ya existen en nuestra tabla limpia
             WHERE "Clave del incendio" IN (SELECT id_clave_inc FROM main.incendios)
-            
             ON CONFLICT DO NOTHING;
         """)
+
         
         filas = con.execute("SELECT count(*) FROM main.operaciones").fetchone()[0]
         print(f"   - [Enrichment] Operaciones insertadas con éxito ({filas} registros).")

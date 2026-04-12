@@ -3,20 +3,26 @@ import os
 import sys
 import subprocess
 
-# Importamos nuestras piezas de código modulares
-# ¡AQUÍ AGREGAMOS LAS NUEVAS IMPORTACIONES!
+# 1. Importaciones actualizadas con los nombres correctos de tus nuevas funciones
 from scripts.config import RAW_DB, WORKING_DB, SCHEMA_SQL, CSV_POBLACION, ARCHIVO_CONAFOR
-from scripts.transform import unificar_municipios, migrar_incendios_corregidos
+from scripts.transform import (
+    unificar_municipios, 
+    migrar_incendios_corregidos, 
+    eliminar_duplicados_fisicos,
+    estandarizar_categoricos,
+    neutralizar_inconsistencias,
+    ejecutar_limpieza_texto
+)
 from scripts.enrichment import cargar_demografia, cargar_operaciones
 
 def ejecutar_migracion_completa():
-    print("\nIniciando proceso de actualizacion de la base Working...")
+    print("\nIniciando proceso de actualizacion y limpieza profunda...")
 
     if not os.path.exists(RAW_DB):
-        print(f"Error: No se encuentra la base Raw en {RAW_DB}")
+        print(f"[Error] No se encuentra la base Raw en {RAW_DB}")
         return
     if not os.path.exists(SCHEMA_SQL):
-        print(f"Error: No se encuentra el SQL en {SCHEMA_SQL}")
+        print(f"[Error] No se encuentra el SQL en {SCHEMA_SQL}")
         return
 
     try:
@@ -26,78 +32,81 @@ def ejecutar_migracion_completa():
 
         con = duckdb.connect(WORKING_DB)
         
-        # 1. Crear Estructura
+        # --- PASO 1: ESTRUCTURA Y CONEXION ---
         with open(SCHEMA_SQL, 'r') as f:
             con.execute(f.read())
-
         con.execute(f"ATTACH '{RAW_DB}' AS source_db (READ_ONLY)")
 
-        print("Transfiriendo datos con unificación y blindaje en tiempo real...")
-        
-        # 2. Migrar Catálogos Simples (Nivel 1)
+        # --- PASO 2: MIGRACION INICIAL (CATALOGOS) ---
+        print("\nMigrando catalogos iniciales...")
         for tabla in ['diccionario', 'estado', 'vegetacion', 'causa']:
             con.execute(f"INSERT INTO main.{tabla} SELECT * FROM source_db.{tabla}")
-            filas = con.execute(f"SELECT count(*) FROM main.{tabla}").fetchone()[0]
-            print(f"   - {tabla} lista ({filas} registros).")
+            print(f"   - {tabla} migrada.")
 
-        # 3. Transformaciones (Nivel 2 y 3)
+        # --- PASO 3: TRANSFORMACIONES GEOGRAFICAS Y DEPURACION (EDOMEX) ---
+        print("\nProcesando geografia del Estado de Mexico y depurando IDs...")
         unificar_municipios(con)
-        cargar_demografia(con, CSV_POBLACION) 
         migrar_incendios_corregidos(con)
+        # Eliminamos duplicados inmediatamente despues de cargar la tabla principal
+        eliminar_duplicados_fisicos(con)
 
-        # ¡AQUÍ ENCIENDES TUS OPERACIONES!
-        cargar_operaciones(con, ARCHIVO_CONAFOR)
-
-        # 4. Migrar Tablas Hijas Pesadas (Nivel 4)
+        # --- PASO 4: MIGRACION DE TABLAS PESADAS ---
+        print("\nMigrando datos masivos (Danos y Climatologia)...")
         for tabla in ['danos', 'climatologia']:
             con.execute(f"INSERT INTO main.{tabla} SELECT * FROM source_db.{tabla}")
-            filas = con.execute(f"SELECT count(*) FROM main.{tabla}").fetchone()[0]
-            print(f"   - {tabla} lista ({filas} registros).")
+            print(f"   - {tabla} migrada.")
 
+        # --- PASO 5: LIMPIEZA DE CALIDAD (EDA PREP) ---
+        print("\nEjecutando algoritmos de limpieza y estandarizacion logica...")
+        estandarizar_categoricos(con)
+        neutralizar_inconsistencias(con)
+        ejecutar_limpieza_texto(con)
+
+        # --- PASO 6: ENRIQUECIMIENTO (CSV EXTERNOS) ---
+        print("\nEnriqueciendo base con datos externos...")
+        cargar_demografia(con, CSV_POBLACION) 
+        cargar_operaciones(con, ARCHIVO_CONAFOR)
+
+        # --- PASO 7: CIERRE Y LIMPIEZA DE VISTA ---
+        con.execute("DETACH source_db") 
         con.close()
-        print(f"\nSincronizacion exitosa en: {WORKING_DB}")
+        
+        print(f"\nSincronizacion y limpieza exitosa.")
+        print(f"Ubicacion: {WORKING_DB}")
 
     except Exception as e:
         print(f"\nError critico durante el proceso: {e}")
 
 def actualizar_desde_repositorio():
-    print("\n--- Ejecutando Sincronización Automática (Git + DVC) ---")
+    print("\n--- Ejecutando Sincronizacion Automatica (Git + DVC) ---")
     try:
-        # ROOT_DIR para Git/DVC es el directorio base del proyecto
         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         
-        print("1. Descargando cambios de código (git pull origin main)...")
+        print("1. Descargando cambios de codigo (git pull origin main)...")
         subprocess.run(["git", "pull", "origin", "main"], cwd=base_dir, check=True)
         
-        print("\n2. Descargando última versión de los datos (dvc pull)...")
-        subprocess.run(["dvc", "pull"], cwd=base_dir, check=True)
+        print("\n2. Descargando ultima version de los datos (dvc pull --force)...")
+        subprocess.run(["dvc", "pull", "-f"], cwd=base_dir, check=True)
         
-        print("\n¡Descarga completada! Procediendo a generar la base Working...")
+        print("\nDescarga completada. Procediendo a generar la base Working...")
         ejecutar_migracion_completa()
         
     except subprocess.CalledProcessError as e:
-        print(f"\n[ERROR] Falló la sincronización con el servidor.")
+        print(f"\n[ERROR] Fallo la sincronizacion con el servidor.")
         print(f"Detalle del error: {e}")
 
 def menu():
     print("\n" + "="*55)
-    print("   SISTEMA DE ACTUALIZACION DE DATOS (REPLICACION)")
+    print("   SISTEMA DE ACTUALIZACION Y LIMPIEZA (EDOMEX)")
     print("="*55)
-    print("1. Actualizar Limpieza (Re-procesar datos locales)")
-    print("2. Sincronizar y Re-procesar (Automatizado Git+DVC)")
+    print("1. Re-procesar y Limpiar datos locales")
+    print("2. Sincronizar (Git+DVC) y Limpiar")
     print("3. Salir")
-    
-    op = input("\n¿Que quieres hacer? Selecciona una opcion: ")
-    
-    if op == "1":
-        ejecutar_migracion_completa()
-    elif op == "2":
-        actualizar_desde_repositorio()
-    elif op == "3":
-        print("Cerrando sistema.")
-        sys.exit()
-    else:
-        print("Opcion no valida.")
+    op = input("\nQue quieres hacer? ")
+    if op == "1": ejecutar_migracion_completa()
+    elif op == "2": actualizar_desde_repositorio()
+    elif op == "3": sys.exit()
+    else: print("Opcion no valida.")
 
 if __name__ == "__main__":
     menu()
