@@ -38,3 +38,4 @@ def migrar_incendios_corregidos(con):
             id_causa, id_vegetacion, latitud, longitud, fecha_inicio, tipo_de_incendio, anio
         FROM source_db.incendios
     """)
+

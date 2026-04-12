@@ -5,7 +5,6 @@
 *.db.tmp
 
 # --- Archivos crudos y pesados ---
-*.csv
 *.xlsx
 
 # --- Logs y Temporales de Python ---
