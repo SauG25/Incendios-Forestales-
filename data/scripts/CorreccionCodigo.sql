@@ -55,8 +55,8 @@ CREATE TABLE IF NOT EXISTS incendios (
     id_cvegeo VARCHAR NOT NULL,       
     id_causa INTEGER NOT NULL, 
     id_vegetacion INTEGER NOT NULL, 
-    latitud FLOAT NOT NULL,
-    longitud FLOAT NOT NULL,
+    latitud FLOAT,    -- MODIFICADO: Ahora permite NULL para limpieza
+    longitud FLOAT,   -- MODIFICADO: Ahora permite NULL para limpieza
     fecha_inicio DATE NOT NULL,
     tipo_de_incendio VARCHAR NOT NULL,
     anio INTEGER NOT NULL,            
@@ -92,22 +92,22 @@ CREATE TABLE IF NOT EXISTS demografia (
 
 CREATE TABLE IF NOT EXISTS danos (                  
     id_clave_inc VARCHAR PRIMARY KEY, 
-    hojarasca FLOAT NOT NULL,
-    arbustivo FLOAT NOT NULL,
-    herbaceo FLOAT NOT NULL,
-    arbolado_adulto FLOAT NOT NULL,
-    renuevo FLOAT NOT NULL,
+    hojarasca FLOAT,        -- MODIFICADO: Permite NULL
+    arbustivo FLOAT,        -- MODIFICADO: Permite NULL
+    herbaceo FLOAT,         -- MODIFICADO: Permite NULL
+    arbolado_adulto FLOAT,  -- MODIFICADO: Permite NULL
+    renuevo FLOAT,          -- MODIFICADO: Permite NULL
     tamanio VARCHAR NOT NULL,         
     FOREIGN KEY (id_clave_inc) REFERENCES incendios(id_clave_inc)
 );
 
 -- NUEVA TABLA: Operaciones (Relación 1 a 1)
 CREATE TABLE IF NOT EXISTS operaciones (
-    id_clave_inc VARCHAR PRIMARY KEY,  -- Actúa como PK y FK simultáneamente
+    id_clave_inc VARCHAR PRIMARY KEY,  
     fecha_termino DATE,
     hora_deteccion TIME,
     hora_llegada TIME,
-    duracion_hhmm INTERVAL,            -- INTERVAL es ideal en DuckDB para horas:minutos
+    duracion_hhmm INTERVAL,            
     duracion_dias INTEGER,
     
     FOREIGN KEY (id_clave_inc) REFERENCES incendios(id_clave_inc)
