@@ -3,101 +3,118 @@ import os
 import sys
 import subprocess
 
-# 1. Importaciones actualizadas con los nombres correctos de tus nuevas funciones
 from scripts.config import RAW_DB, WORKING_DB, SCHEMA_SQL, CSV_POBLACION, ARCHIVO_CONAFOR
 from scripts.transform import (
     unificar_municipios, 
     migrar_incendios_corregidos, 
-    eliminar_duplicados_fisicos,
-    estandarizar_categoricos,
+    corregir_geografia_invertida, 
+    deduplicar_sistemico,
+    estandarizar_y_limpiar_texto,
     neutralizar_inconsistencias,
-    ejecutar_limpieza_texto
+    procesar_climatologia,
+    limpiar_huerfanos
 )
 from scripts.enrichment import cargar_demografia, cargar_operaciones
 
 def ejecutar_migracion_completa():
-    print("\nIniciando proceso de actualizacion y limpieza profunda...")
+    print("\nIniciando migracion jerarquica con limpieza agresiva en origen...")
 
-    if not os.path.exists(RAW_DB):
-        print(f"[Error] No se encuentra la base Raw en {RAW_DB}")
-        return
-    if not os.path.exists(SCHEMA_SQL):
-        print(f"[Error] No se encuentra el SQL en {SCHEMA_SQL}")
+    if not os.path.exists(RAW_DB) or not os.path.exists(SCHEMA_SQL):
+        print("[Error] Archivos base no encontrados.")
         return
 
     try:
         if os.path.exists(WORKING_DB):
             os.remove(WORKING_DB)
-            print("Base Working anterior eliminada. Generando copia limpia...")
+            print("Base Working reiniciada.")
 
         con = duckdb.connect(WORKING_DB)
         
-        # --- PASO 1: ESTRUCTURA Y CONEXION ---
+        # --- PASO 0: CREACION DE ESTRUCTURA ---
         with open(SCHEMA_SQL, 'r') as f:
             con.execute(f.read())
         con.execute(f"ATTACH '{RAW_DB}' AS source_db (READ_ONLY)")
 
-        # --- PASO 2: MIGRACION INICIAL (CATALOGOS) ---
-        print("\nMigrando catalogos iniciales...")
-        for tabla in ['diccionario', 'estado', 'vegetacion', 'causa']:
+        # --- NIVEL 1: ENTIDADES PADRE ---
+        print("\nNivel 1: Migrando diccionarios con eliminacion de caracteres invisibles...")
+        # Usamos doble diagonal invertida para evitar el SyntaxWarning de Python
+        con.execute("""
+            INSERT INTO main.diccionario 
+            SELECT regexp_replace(id_variable, '[\\s\\t\\n\\r]', '', 'g'), fuente, nombre_completo, unidad_de_medida 
+            FROM source_db.diccionario
+        """)
+        
+        for tabla in ['estado', 'vegetacion', 'causa']:
             con.execute(f"INSERT INTO main.{tabla} SELECT * FROM source_db.{tabla}")
-            print(f"   - {tabla} migrada.")
 
-        # --- PASO 3: TRANSFORMACIONES GEOGRAFICAS Y DEPURACION (EDOMEX) ---
-        print("\nProcesando geografia del Estado de Mexico y depurando IDs...")
+        # --- NIVEL 2 Y 3: GEOGRAFIA E INCENDIOS ---
+        print("\nNivel 2 y 3: Migrando municipios e incendios...")
         unificar_municipios(con)
         migrar_incendios_corregidos(con)
-        # Eliminamos duplicados inmediatamente despues de cargar la tabla principal
-        eliminar_duplicados_fisicos(con)
+        cargar_demografia(con, CSV_POBLACION)
 
-        # --- PASO 4: MIGRACION DE TABLAS PESADAS ---
-        print("\nMigrando datos masivos (Danos y Climatologia)...")
-        for tabla in ['danos', 'climatologia']:
-            con.execute(f"INSERT INTO main.{tabla} SELECT * FROM source_db.{tabla}")
-            print(f"   - {tabla} migrada.")
+        # --- FASE A: LIMPIEZA DE PADRES ---
+        print("\nFASE A: Sincronizando catalogos maestros...")
+        con.execute("BEGIN TRANSACTION")
+        corregir_geografia_invertida(con)
+        deduplicar_sistemico(con)
+        con.execute("COMMIT")
 
-        # --- PASO 5: LIMPIEZA DE CALIDAD (EDA PREP) ---
-        print("\nEjecutando algoritmos de limpieza y estandarizacion logica...")
-        estandarizar_categoricos(con)
-        neutralizar_inconsistencias(con)
-        ejecutar_limpieza_texto(con)
-
-        # --- PASO 6: ENRIQUECIMIENTO (CSV EXTERNOS) ---
-        print("\nEnriqueciendo base con datos externos...")
-        cargar_demografia(con, CSV_POBLACION) 
+        # --- NIVEL 4: ENTIDADES HIJAS ---
+        print("\nNivel 4: Migrando datos dependientes con limpieza de llaves foraneas...")
+        # Limpieza con doble diagonal invertida en id_variable e id_clave_inc
+        con.execute("""
+            INSERT INTO main.climatologia (id_registro, id_variable, id_clave_inc, fecha_de_observacion, resultado_numerico)
+            SELECT 
+                id_registro, 
+                regexp_replace(id_variable, '[\\s\\t\\n\\r]', '', 'g'), 
+                regexp_replace(id_clave_inc, '[\\s\\t\\n\\r]', '', 'g'), 
+                fecha_de_observacion, 
+                resultado_numerico 
+            FROM source_db.climatologia
+            WHERE regexp_replace(id_clave_inc, '[\\s\\t\\n\\r]', '', 'g') IN (SELECT id_clave_inc FROM main.incendios)
+        """)
+        
+        con.execute("""
+            INSERT INTO main.danos (id_clave_inc, hojarasca, arbustivo, herbaceo, arbolado_adulto, renuevo, tamanio)
+            SELECT regexp_replace(id_clave_inc, '[\\s\\t\\n\\r]', '', 'g'), hojarasca, arbustivo, herbaceo, arbolado_adulto, renuevo, tamanio
+            FROM source_db.danos 
+            WHERE regexp_replace(id_clave_inc, '[\\s\\t\\n\\r]', '', 'g') IN (SELECT id_clave_inc FROM main.incendios)
+        """)
+        
         cargar_operaciones(con, ARCHIVO_CONAFOR)
 
-        # --- PASO 7: CIERRE Y LIMPIEZA DE VISTA ---
+        # --- FASE B: LIMPIEZA FINAL ---
+        print("\nFASE B: Procesamiento final y limpieza de variables NASA...")
+        con.execute("BEGIN TRANSACTION")
+        estandarizar_y_limpiar_texto(con)
+        neutralizar_inconsistencias(con)
+        procesar_climatologia(con)
+        limpiar_huerfanos(con)
+        con.execute("COMMIT")
+
         con.execute("DETACH source_db") 
         con.close()
-        
-        print(f"\nSincronizacion y limpieza exitosa.")
-        print(f"Ubicacion: {WORKING_DB}")
+        print("\nSincronizacion exitosa.")
 
     except Exception as e:
-        print(f"\nError critico durante el proceso: {e}")
+        try: con.execute("ROLLBACK")
+        except: pass
+        print(f"\nError en el Pipeline: {e}")
 
 def actualizar_desde_repositorio():
     print("\n--- Ejecutando Sincronizacion Automatica (Git + DVC) ---")
     try:
         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-        
-        print("1. Descargando cambios de codigo (git pull origin main)...")
         subprocess.run(["git", "pull", "origin", "main"], cwd=base_dir, check=True)
-        
-        print("\n2. Descargando ultima version de los datos (dvc pull --force)...")
         subprocess.run(["dvc", "pull", "-f"], cwd=base_dir, check=True)
-        
-        print("\nDescarga completada. Procediendo a generar la base Working...")
         ejecutar_migracion_completa()
-        
     except subprocess.CalledProcessError as e:
-        print(f"\n[ERROR] Fallo la sincronizacion con el servidor.")
-        print(f"Detalle del error: {e}")
+        print(f"\n[ERROR] Fallo la sincronizacion.")
 
 def menu():
     print("\n" + "="*55)
-    print("   SISTEMA DE ACTUALIZACION Y LIMPIEZA (EDOMEX)")
+    print("   SISTEMA DE ACTUALIZACION Y LIMPIEZA (EDOMEX/TLAXCALA)")
     print("="*55)
     print("1. Re-procesar y Limpiar datos locales")
     print("2. Sincronizar (Git+DVC) y Limpiar")

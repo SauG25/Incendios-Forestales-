@@ -3,17 +3,18 @@ import os
 
 def cargar_demografia(con, csv_path):
     if not os.path.exists(csv_path):
-        print(f"   - [Enrichment] Advertencia: No se encontró el CSV en {csv_path}. Saltando carga.")
+        print(f"   - [Enrichment] Advertencia: No se encontro el CSV en {csv_path}. Saltando carga.")
         return
 
-    print("   - [Enrichment] Cargando y formateando datos demográficos...")
+    print("   - [Enrichment] Cargando y formateando datos demograficos...")
     try:
         # 1. Leer el CSV y formatear
         df = pd.read_csv(csv_path)
-        df['id_cvegeo'] = df['CLAVE'].astype(str).str.zfill(5)
+        # Aseguramos limpieza y formato de 5 digitos para el municipio
+        df['id_cvegeo'] = df['CLAVE'].astype(str).str.strip().str.zfill(5)
         con.register('df_demo_temp', df)
 
-        # 2. EL SALVAVIDAS: Crear municipios que vienen en el CSV pero no están en la BD
+        # 2. EL SALVAVIDAS: Crear municipios que vienen en el CSV pero no estan en la BD
         con.execute("""
             INSERT INTO main.municipios (id_cvegeo, id_clave_ent, nombre_municipio)
             SELECT DISTINCT 
@@ -22,9 +23,10 @@ def cargar_demografia(con, csv_path):
                 'MUNICIPIO DESDE CSV POR REVISAR'
             FROM df_demo_temp
             WHERE id_cvegeo NOT IN (SELECT id_cvegeo FROM main.municipios)
+            ON CONFLICT DO NOTHING
         """)
 
-        # 3. Insertar Demografía (ahora sí, todos los municipios existen)
+        # 3. Insertar Demografia
         con.execute("""
             INSERT INTO main.demografia 
             SELECT 
@@ -40,11 +42,11 @@ def cargar_demografia(con, csv_path):
         """)
         
         filas = con.execute("SELECT count(*) FROM main.demografia").fetchone()[0]
-        print(f"   - [Enrichment] Demografía insertada con éxito ({filas} registros).")
+        print(f"   - [Enrichment] Demografia insertada con exito ({filas} registros).")
     
     except Exception as e:
-        print(f"   - [Enrichment] Error al procesar la demografía: {e}")
-# (Manten tu funcion cargar_demografia arriba de esto)
+        print(f"   - [Enrichment] Error al procesar la demografia: {e}")
+
 def cargar_operaciones(con, archivo_operaciones):
     if not os.path.exists(archivo_operaciones):
         print(f"   - [Enrichment] Advertencia: No se encontro el archivo en {archivo_operaciones}.")
@@ -52,16 +54,12 @@ def cargar_operaciones(con, archivo_operaciones):
 
     print("   - [Enrichment] Cargando datos de operaciones desde CSV original...")
     try:
-        # Leemos el CSV (Cargamos todo como texto primero para evitar errores de pandas)
         df_ops = pd.read_csv(archivo_operaciones, dtype=str)
-        
-        # Limpieza rápida de espacios en los nombres de las columnas por si acaso
         df_ops.columns = df_ops.columns.str.strip()
             
         con.register('df_ops_temp', df_ops)
 
-        # Hacemos el INSERT usando los nombres EXACTOS de tu CSV
-
+        # Aplicamos TRIM a la clave del incendio para evitar el error de Foreing Key
         con.execute("""
             INSERT INTO main.operaciones (
                 id_clave_inc, 
@@ -72,28 +70,19 @@ def cargar_operaciones(con, archivo_operaciones):
                 duracion_dias
             )
             SELECT 
-                "Clave del incendio",
-                
-                -- Usamos strptime para convertir el texto 'DD/MM/YYYY' a DATE real
-                -- Si tu CSV usa guiones (DD-MM-YYYY), cambia las / por - abajo
+                TRIM("Clave del incendio"),
                 TRY_CAST(strptime("Fecha Termino", '%d/%m/%Y') AS DATE),
-                
-                -- Para las horas, si vienen en formato HH:MM o HH:MM:SS
                 TRY_CAST("Detección" AS TIME),
                 TRY_CAST("Llegada" AS TIME),
-                
-                -- El intervalo y los días
                 TRY_CAST("Duración" AS INTERVAL),
                 TRY_CAST("Duración días" AS INTEGER)
-                
             FROM df_ops_temp
-            WHERE "Clave del incendio" IN (SELECT id_clave_inc FROM main.incendios)
+            WHERE TRIM("Clave del incendio") IN (SELECT id_clave_inc FROM main.incendios)
             ON CONFLICT DO NOTHING;
         """)
-
         
         filas = con.execute("SELECT count(*) FROM main.operaciones").fetchone()[0]
-        print(f"   - [Enrichment] Operaciones insertadas con éxito ({filas} registros).")
+        print(f"   - [Enrichment] Operaciones insertadas con exito ({filas} registros).")
     
     except Exception as e:
         print(f"   - [Enrichment] Error al procesar operaciones: {e}")

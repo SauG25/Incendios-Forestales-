@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS climatologia (
     id_variable VARCHAR NOT NULL,     
     id_clave_inc VARCHAR NOT NULL,    
     fecha_de_observacion DATE NOT NULL,
-    resultado_numerico FLOAT NOT NULL,
+    resultado_numerico FLOAT,
     
     FOREIGN KEY (id_variable) REFERENCES diccionario(id_variable), 
     FOREIGN KEY (id_clave_inc) REFERENCES incendios(id_clave_inc) 
