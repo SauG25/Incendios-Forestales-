@@ -38,7 +38,7 @@ def ejecutar_migracion_completa():
         con = duckdb.connect(WORKING_DB)
         
         # --- PASO 0: ESTRUCTURA ---
-        with open(SCHEMA_SQL, 'r') as f:
+        with open(SCHEMA_SQL, 'r', encoding="utf-8") as f:
             con.execute(f.read())
         con.execute(f"ATTACH '{RAW_DB}' AS source_db (READ_ONLY)")
 
@@ -139,7 +139,7 @@ def actualizar_desde_repositorio():
         subprocess.run(["git", "pull", "origin", "main"], cwd=base_dir, check=True)
         
         print("2. Pull de DVC (trayendo bases de datos pesadas)...")
-        subprocess.run(["dvc", "pull", "-f"], cwd=base_dir, check=True)
+        subprocess.run(["python", "-m", "dvc", "pull", "-f"], cwd=base_dir, check=True)
         
         print("\nSincronización de archivos completa. Iniciando migración...")
         ejecutar_migracion_completa()
