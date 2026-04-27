@@ -34,7 +34,7 @@ def depurar_diccionario():
             else:
                 print(f"[{i+1}/{len(diccionario)}] ❌ {var_id} RECHAZADA (Error {res.status_code})")
         except:
-            print(f"[{i+1}/{len(diccionario)}] ⚠️ {var_id} ERROR DE CONEXION")
+            print(f"[{i+1}/{len(diccionario)}] ⚠️lk {var_id} ERROR DE CONEXION")
         
         # Pausa minima para no saturar la API en la depuracion
         time.sleep(0.2)

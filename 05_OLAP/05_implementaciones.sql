@@ -3,7 +3,6 @@ CREATE SCHEMA IF NOT EXISTS olap;
 
 -- dim_tiempo
 
-
 ALTER TABLE olap.dim_tiempo ADD COLUMN IF NOT EXISTS trimestre INTEGER;
 ALTER TABLE olap.dim_tiempo ADD COLUMN IF NOT EXISTS nombre_mes VARCHAR;
 ALTER TABLE olap.dim_tiempo ADD COLUMN IF NOT EXISTS estacion VARCHAR;
@@ -53,7 +52,6 @@ FROM (
 JOIN main.estado e 
     ON m.id_clave_ent = e.id_clave_ent
 WHERE u.id_cvegeo = m.id_cvegeo;
-
 
 
 -- dim_vegetacion

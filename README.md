@@ -1,6 +1,5 @@
 # Modelo Predictivo de Incendios Forestales
 
-
 Proyecto de Ciencia de Datos enfocado en la predicción y análisis de incendios forestales utilizando datos de la NASA,GOOGLE y CONAFOR.
 
 ##  Arquitectura de Datos
